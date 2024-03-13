@@ -1,6 +1,5 @@
 .navigation{
     position: sticky;
-    height: 100vh;
     overflow-y: auto;
     overflow-x: hidden;
     top: 0;

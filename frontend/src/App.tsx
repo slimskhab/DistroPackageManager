@@ -7,13 +7,13 @@ import HomePage from "./pages/homepage/HomePage";
 import Dashboard from "./pages/dashboard/Dashboard";
 import Sidebar from "./components/sidebar/Sidebar";
 import Stats from "./pages/stats/Stats";
+import RepositoryList from "./pages/repository-list/RepositoryList";
 
 function App() {
   return (
     <div
       style={{
         display: "flex",
-        justifyContent: "space-between",
         width:"100%"
       }}
     >
@@ -22,6 +22,8 @@ function App() {
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/stats" element={<Stats />} />
+        <Route path="/repository-list" element={<RepositoryList />} />
+
 
       </Routes>
     </div>

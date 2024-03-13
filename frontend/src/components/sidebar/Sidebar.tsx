@@ -65,18 +65,16 @@ const Sidebar: React.FC = () => {
       className="navigation"
       width={256}
       style={{
-        height: '100vh',
-        bottom: '20px',
         alignItems:"start",
         textAlign:"start",
-        position:"sticky",
-        marginRight:"50px",
-        left:20
-
+        position:"relative",
+        paddingLeft:20,
+        marginRight:20,
+        height:"100vh"
       }}
       theme={'light'}
       >
-                <img src={logoIcon} alt="Logo" style={{ height: '40px' }} />
+                <img src={logoIcon} alt="Logo" style={{ height: '40px',padding:30 }} />
 
  <Menu
       onClick={onClick}
