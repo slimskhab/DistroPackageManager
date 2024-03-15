@@ -41,7 +41,7 @@ const columns = [
 ];
 function Dashboard() {
   return (
-    <div style={{ width: "100%" }}>
+    <div style={{ width: "100%",paddingTop:"30px" }}>
       <Space direction="vertical" size="large" style={{ display: "flex",flexDirection:"row",flexWrap:"wrap" }}>
           <Card title="Hit/Miss rate" hoverable={true} style={{  width: "calc((90vw - (256px + 50px + 20px)) / 4)" }}>
             <Tooltip title="20% miss rate">
