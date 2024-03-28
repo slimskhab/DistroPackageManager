@@ -1,0 +1,45 @@
+
+  .console {
+    font-family: 'Fira Mono';
+    width: 700px;
+    height: 450px;
+    box-sizing: border-box;
+    margin: auto;
+  }
+  
+  .console header {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    background-color: #555;
+    height: 45px;
+    line-height: 45px;
+    text-align: center;
+    color: #DDD;
+  }
+  
+  .console .consolebody {
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    box-sizing: border-box;
+    padding: 20px;
+    height: calc(100% - 40px);
+    overflow: scroll;
+    background-color: #000;
+    color: #63de00;
+    scrollbar-width: none; /* Hide the scrollbar for Firefox */
+    -ms-overflow-style: none;
+  }
+  
+  .console .consolebody p {
+    line-height: 1.5rem;
+  }
+
+  .input-style{
+    background: transparent;
+    background: transparent;
+    color: #63de00;
+    font-family: 'Fira Mono';
+    border: none;
+    outline: none;
+    font-size: 18px;
+  }
