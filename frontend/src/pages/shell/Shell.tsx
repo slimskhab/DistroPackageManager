@@ -38,7 +38,6 @@ function Shell() {
         { "role": "user", "content": `Based on the previous commands and responses give the response of a ubuntu instance terminal for this command ${newCommand}. you response should be in a json format with reponse object that has the reponse` }
       ]
     };
-    console.log(shellCommands);
     axios.post(url, data, { headers })
       .then(response => {
         const gptResponse=JSON.parse(response.data.choices[0].message.content);
@@ -48,7 +47,34 @@ function Shell() {
 
       })
       .catch(error => {
-        setShellCommands(prevshellCommands=>[...prevshellCommands,{ "role": "system", "content": "Connection error"}])
+        console.log("catched here");
+        const headers = {
+          'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY2}`,
+          'Content-Type': 'application/json'
+        };
+        
+        const data = {
+          'model': 'gpt-3.5-turbo',
+          'messages': [
+            ...shellCommands,
+            { "role": "user", "content": `Based on the previous commands and responses give the response of a ubuntu instance terminal for this command ${newCommand}. you response should be in a json format with reponse object that has the reponse` }
+          ]
+        };
+        axios.post(url, data, { headers })
+          .then(response => {
+            const gptResponse=JSON.parse(response.data.choices[0].message.content);
+    
+            console.log('Response:', gptResponse.response);
+            setShellCommands(prevshellCommands=>[...prevshellCommands,{ "role": "system", "content": gptResponse.response}])
+    
+          })
+          .catch(error => {
+            console.log("error");
+    
+            setShellCommands(prevshellCommands=>[...prevshellCommands,{ "role": "system", "content": "Connection error"}])
+    
+          });
+
 
       });
   };

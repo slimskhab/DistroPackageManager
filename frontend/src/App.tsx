@@ -8,6 +8,7 @@ import RepositoryList from "./pages/repository-list/RepositoryList";
 import ProxyServerSettings from "./pages/settings/proxy-server-settings/ProxyServerSettings";
 import CacheAdministration from "./pages/settings/cache-administration/CacheAdministration";
 import Shell from "./pages/shell/Shell";
+import PackageList from "./pages/package-list/PackageList";
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/stats" element={<Stats />} />
         <Route path="/repository-list" element={<RepositoryList />} />
+        <Route path="/package-list" element={<PackageList />} />
+
         <Route path="/proxy-server-settings" element={<ProxyServerSettings />} />
         <Route path="/cache-administration" element={<CacheAdministration />} />
         <Route path="/shell" element={<Shell />} />

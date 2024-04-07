@@ -41,14 +41,17 @@ const items: MenuProps["items"] = [
   
     getItem(<Link to={'/dashboard'}>Dashboard</Link>, "1",<DashboardOutlined /> ),
     getItem(<Link to={'/repository-list'}>Repository List</Link>, "2",<DatabaseOutlined />),
-    getItem(<Link to={'/shell'}>Shell</Link>, "3",<CodeOutlined />),
-    getItem(<Link to={'/statistics'}>Statistics</Link>, "4",<PieChartOutlined />),
+    getItem(<Link to={'/package-list'}>Package List</Link>, "3",<DatabaseOutlined />),
+    getItem(<Link to={'/package-list'}>Backend List</Link>, "4",<DatabaseOutlined />),
+
+    getItem(<Link to={'/shell'}>Shell</Link>, "5",<CodeOutlined />),
+    getItem(<Link to={'/statistics'}>Statistics</Link>, "6",<PieChartOutlined />),
     getItem("Settings", "sub1", <SettingOutlined />, [
-      getItem(<Link to={'/proxy-server-settings'}>Proxy Server Settings</Link>, "5"),
-      getItem(<Link to={'/cache-administration'}>Cache Administration</Link>, "6"),
-      getItem(<Link to={'/performance'}>Performance</Link>, "7"),
-      getItem(<Link to={'/security'}>Security</Link>, "8"),
-      getItem(<Link to={'/authentification'}>Authentification</Link>, "9"),
+      getItem(<Link to={'/proxy-server-settings'}>Proxy Server Settings</Link>, "7"),
+      getItem(<Link to={'/cache-administration'}>Preferences</Link>, "8"),
+      getItem(<Link to={'/performance'}>Performance</Link>, "9"),
+      getItem(<Link to={'/security'}>Security</Link>, "10"),
+      getItem(<Link to={'/authentification'}>Authentification</Link>, "11"),
     ]),
  
 

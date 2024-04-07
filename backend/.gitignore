@@ -1,0 +1,12 @@
+/target/
+
+# Cargo.lock file
+Cargo.lock
+
+# Generated documentation
+/doc/
+
+# IDE/Editor specific files
+/.idea/
+.vscode/
+*.iml

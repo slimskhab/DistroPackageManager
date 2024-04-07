@@ -1,22 +1,13 @@
-import {
-  DeleteOutlined,
-  DownOutlined,
-  RedoOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, DownOutlined, RedoOutlined } from "@ant-design/icons";
 import {
   Button,
   Card,
-  Col,
   Drawer,
   Dropdown,
   Input,
-  InputNumber,
-  Row,
   Slider,
   Space,
   Tag,
-  message,
 } from "antd";
 import React, { useState } from "react";
 import { Table } from "antd";
@@ -89,7 +80,7 @@ const columns: TableColumnsType<Repository> = [
 const data: Repository[] = [
   {
     key: "1",
-    name: "Nmap",
+    name: "toto",
     numberOfPackages: 50,
     statuses: ["Active"],
     creationDate: new Date(2000, 0, 1).toLocaleDateString(), // Month is zero-based index (0 for January)
@@ -97,7 +88,7 @@ const data: Repository[] = [
   },
   {
     key: "2",
-    name: "WireShark",
+    name: "koko",
     size: 98,
     creationDate: new Date(2000, 0, 1).toLocaleDateString(), // Month is zero-based index (0 for January)
     statuses: ["Inactive"],
@@ -106,7 +97,7 @@ const data: Repository[] = [
 ];
 
 function RepositoryList() {
-    // Drawer
+  // Drawer
   const [open, setOpen] = useState(false);
 
   const showDrawer = () => {
@@ -116,7 +107,6 @@ function RepositoryList() {
   const onClose = () => {
     setOpen(false);
   };
-
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
@@ -148,45 +138,69 @@ function RepositoryList() {
     }, 1000);
   };
 
-  const [inputValue, setInputValue] = useState(15);
-  const [purgingPolicy, setPurgingPolicy] = useState<string>("Least Recently Used (LRU)");
-
-
   const onChangeSlider = (newValue: number | null) => {
     if (newValue !== null) {
       setInputValue(newValue);
     }
   };
-  const items: MenuProps["items"] = [
+
+  const [inputValue, setInputValue] = useState(15);
+
+  const [purgingPolicy, setPurgingPolicy] = useState<string>(
+    "None"
+  );
+  const purgingPolicyItems: MenuProps["items"] = [
     {
-      label: "Least Recently Used (LRU)",
+      label: "None",
       key: "1",
     },
     {
-      label: "Sized Based",
+      label: "Least Recently Used (LRU)",
       key: "2",
     },
     {
+      label: "Sized Based",
+      key: "3",
+    },
+    {
       label: "Age Based",
+      key: "4",
+    },
+  ];
+  const handlePurgingPolicyMenuClick: MenuProps["onClick"] = (e) => {
+    setPurgingPolicy(
+      purgingPolicyItems.find((item) => item.key === e.key).label
+    );
+  };
+
+  const [retentionPolicy, setRetentionPolicy] = useState<string>(
+    "None"
+  );
+  const retentionPolicyItems: MenuProps["items"] = [
+    {
+      label: "None",
+      key: "1",
+    },
+    {
+      label: "Size Based",
+      key: "2",
+    },
+    {
+      label: "Miss Rate Based",
       key: "3",
     },
   ];
-  const handleMenuClick: MenuProps["onClick"] = (e) => {
-    setPurgingPolicy(items.find(item => item.key===e.key).label);
-  };
-
-
-
-  const menuProps = {
-    items,
-    onClick: handleMenuClick,
+  const handleRetentionPolicyMenuClick: MenuProps["onClick"] = (e) => {
+    setRetentionPolicy(
+      retentionPolicyItems.find((item) => item.key === e.key).label
+    );
   };
 
   const formatter = (value?: number | undefined): React.ReactNode => {
     if (value !== undefined) {
       return `${value}%`;
     }
-    return null; 
+    return null;
   };
   return (
     <div
@@ -258,21 +272,24 @@ function RepositoryList() {
 
           <div style={{ display: "flex", flexDirection: "column" }}>
             <label>Purging Policy:</label>
-            <Dropdown menu={menuProps} trigger={["click"]}>
-              <Button style={{textAlign:"start"}}>
-                <Space>
-                  {purgingPolicy}
-                  <DownOutlined />
-                </Space>
+            <Dropdown
+              menu={{
+                items: purgingPolicyItems,
+                onClick: handlePurgingPolicyMenuClick,
+              }}
+              trigger={["click"]}
+            >
+              <Button style={{ textAlign: "start" }}>
+                {purgingPolicy}
+                <DownOutlined />
               </Button>
             </Dropdown>
           </div>
 
-
-          
-          
-          <div>
-            <label>Threshold</label>
+{
+  purgingPolicy!=="None"&&
+  <div>
+            <label>Purging Policy Threshold:</label>
             <Slider
               min={1}
               max={100}
@@ -280,8 +297,47 @@ function RepositoryList() {
               value={inputValue}
               tooltip={{ formatter }}
             />
-            
           </div>
+}
+          
+
+          {
+            purgingPolicy!=="None"&& <div style={{ display: "flex", flexDirection: "column" }}>
+            <label>Retention Policy:</label>
+            <Dropdown
+              menu={{
+                items: retentionPolicyItems,
+                onClick: handleRetentionPolicyMenuClick,
+              }}
+              trigger={["click"]}
+            >
+              <Button style={{ textAlign: "start" }}>
+                {retentionPolicy}
+                <DownOutlined />
+              </Button>
+            </Dropdown>
+          </div>
+
+          }
+{
+  retentionPolicy!=="None"&&<div>
+  <label>Retention Policy Threshold:</label>
+ 
+ {
+    retentionPolicy==="Size Based"?
+    <Input></Input>
+    :<Slider
+    min={1}
+    max={100}
+    onChange={onChangeSlider}
+    value={inputValue}
+    tooltip={{ formatter }}
+  />
+
+ } 
+</div>
+}
+          
 
           <Button type="primary">Submit</Button>
         </Space>
