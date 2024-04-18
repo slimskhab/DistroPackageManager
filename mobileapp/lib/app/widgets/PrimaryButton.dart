@@ -9,9 +9,9 @@ class PrimaryButton extends StatelessWidget {
   bool isLoading;
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(onPressed: onPressed, child: isLoading?CircularProgressIndicator():Text(title,style: GoogleFonts.montserrat(
+    return ElevatedButton(onPressed: onPressed, child: isLoading?CircularProgressIndicator():Text(title,style: GoogleFonts.nunito(
         color: Colors.white,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w600,
         fontSize: 16
     ),),style: ButtonStyle(
       backgroundColor: MaterialStateProperty.all<Color>(AppColors.primaryColor!),
@@ -21,7 +21,7 @@ class PrimaryButton extends StatelessWidget {
         ),
       ),
       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-        EdgeInsets.symmetric(vertical: 20.0, horizontal: 24.0), // Set the padding of the button
+        EdgeInsets.symmetric(vertical: 4.0, horizontal: 15.0), // Set the padding of the button
       ),
     ),);
   }
