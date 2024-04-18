@@ -14,24 +14,25 @@ import { Table } from "antd";
 import type { MenuProps, TableColumnsType, TableProps } from "antd";
 import LinkInput from "../../components/linkInput/LinkInput";
 import newRequest from "../../utils/newRequest";
+import { Backend } from "../backend-list/BackEndList";
 
-interface Repository {
+export interface Repository {
   id:number;
   repositoryTitle: string;
   numberOfPackages: number;
   repositorySize: string;
   repostioryStatus: number;
-  statuses: string[];
+  repositoryStatus: string[];
 }
 
 const columns: TableColumnsType<Repository> = [
   {
     title: "Name",
-    dataIndex: "name",
+    dataIndex: "repositoryTitle",
   },
   {
     title: "Size",
-    dataIndex: "size",
+    dataIndex: "repostiorySize",
     sorter: {
       compare: (a, b) => a.size - b.size,
       multiple: 2,
@@ -39,7 +40,7 @@ const columns: TableColumnsType<Repository> = [
   },
   {
     title: "Creation Date",
-    dataIndex: "creationDate",
+    dataIndex: "createdAt",
     sorter: {
       compare: (a, b) => {
         const dateA = new Date(a.creationDate).getTime();
@@ -59,11 +60,11 @@ const columns: TableColumnsType<Repository> = [
   },
   {
     title: "Status",
-    dataIndex: "status",
+    dataIndex: "repositoryStatus",
     filterDropdown: true,
-    render: (_, { statuses }) => (
+    render: (_, { repositoryStatus }) => (
       <>
-        {statuses.map((status) => {
+        { repositoryStatus.map((status) => {
           switch (status) {
             case "Active":
               return <Tag color="green">Active</Tag>;
@@ -181,6 +182,16 @@ function RepositoryList() {
     );
   };
 
+
+  const [backEnd, setBackEnd] = useState<string>(
+  );
+  const [backEndItems,setBackEndItems] =useState<MenuProps["items"]>([])
+  const handleBackEndMenuClick: MenuProps["onClick"] = (e) => {
+    setBackEnd(
+      backEndItems.find((item) => item.key === e.key).label
+    );
+  };
+
   const formatter = (value?: number | undefined): React.ReactNode => {
     if (value !== undefined) {
       return `${value}%`;
@@ -189,9 +200,24 @@ function RepositoryList() {
   };
 
 useEffect(()=>{
-  newRequest.get("repository").then((res)=>{
+  setLoading(true);
+  newRequest.get("/repository").then((res)=>{
     setData(res.data.repositories);
-    
+  }).finally(()=>{
+    setLoading(false);
+  })
+
+  setLoading(true);
+  newRequest.get("/backend").then((res)=>{
+    console.log(res.data)
+    setBackEndItems(res.data.backEnds.map((e:Backend,i:number)=>{
+      setBackEnd(e.backEndUrl)
+
+      return {label:e.backEndUrl,key:i.toString()}
+    }))
+    console.log(backEndItems)
+  }).finally(()=>{
+    setLoading(false);
   })
 },[])
 
@@ -208,6 +234,7 @@ useEffect(()=>{
       <Card
         title={"Repositories"}
         style={{ width: "100%", height: "80%" }}
+        loading={loading}
         extra={
           <Space style={{ display: "flex", flexWrap: "wrap" }}>
             {hasSelected && (
@@ -258,9 +285,20 @@ useEffect(()=>{
             <LinkInput />
           </div>
 
-          <div>
+          <div  style={{ display: "flex", flexDirection: "column" }}>
             <label>Back-end URL:</label>
-            <LinkInput />
+            <Dropdown
+              menu={{
+                items: backEndItems,
+                onClick: handleBackEndMenuClick,
+              }}
+              trigger={["click"]}
+            >
+              <Button style={{ textAlign: "start" }}>
+                {backEnd}
+                <DownOutlined />
+              </Button>
+            </Dropdown>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column" }}>

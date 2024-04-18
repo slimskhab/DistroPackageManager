@@ -1,5 +1,6 @@
 const Repository = require("../models/RepositoryModel");
 const Counter = require("../models/CounterModel");
+const BackEnd = require("../models/BackEndModel");
 
 const addRepository=async(req,res)=>{
     try {
@@ -10,20 +11,26 @@ const addRepository=async(req,res)=>{
       { $inc: { seq: 1 } },
       { new: true, upsert: true }
     );
-
+    console.log(req.body)
+console.log(repositoryBackEnd)
+    const backEnd=await BackEnd.findOne({backEndUrl:repositoryBackEnd})
+    console.log(backEnd)
+    if(!backEnd){
+      return res.status(404).json({ message: "BackEnd not found" });
+    }
    
     const repository = new Repository({
       id: counter.seq,
       repositoryTitle,
-      RepositoryUrl
+      repositoryBackEnd
     });
 
-    await Repository.save();
+    await repository.save();
 
     res.status(201).json({
       status: "success",
       message: "Added Repository",
-      Repository
+      repository
     });
     } catch (error) {
       console.log(error)
@@ -34,11 +41,11 @@ const addRepository=async(req,res)=>{
 
 const getAllRepositorys=async (req,res)=>{
   try{
-      const Repositorys=await Repository.find({})
+      const repositories=await Repository.find({})
       return res.status(200).json({
           status: "success",
-          message: "Repositorys retrieved",
-          Repositorys
+          message: "Repositories retrieved",
+          repositories
         }); 
   }catch(e){
       console.error(e);

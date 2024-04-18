@@ -13,6 +13,10 @@ import Security from "./pages/settings/security/Security";
 import GeneralSettings from "./pages/settings/general-settings/GeneralSettings";
 
 function App() {
+
+
+
+
   return (
     <div
       style={{
@@ -21,7 +25,7 @@ function App() {
       }}
     >
       <Sidebar />
-      
+
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/stats" element={<Stats />} />

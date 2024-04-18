@@ -24,7 +24,7 @@ const RepositorySchema = mongoose.Schema({
     repositoryStatus:{
         type:[String],
         required:true,
-        status:["Active"]
+        default:["Active"]
     },
     repositoryBackEnd:{
         type:String,

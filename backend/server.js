@@ -26,6 +26,12 @@ const BackEndRouter = require("./routes/BackEndRoutes")
 app.use("/backend", BackEndRouter)
 
 
+const RepositoryRouter = require("./routes/RepositoryRoutes")
+app.use("/repository", RepositoryRouter)
+
+const PackageRouter = require("./routes/PackageRoutes")
+app.use("/package", PackageRouter)
+
 mongoose.connect(process.env.DBURI);
 
 const db = mongoose.connection;
@@ -38,18 +44,18 @@ db.once('open', () => {
 });
 
 
-app.get("/*", function(req, res){
-  res.sendFile(
-      path.join(__dirname, "../frontend/dist/index.html"),
-      function (err) {
-        if (err) {
-          console.log(err);
-          res.status(500).send(err);
-        }
-      }
-    );
+// app.get("/*", function(req, res){
+//   res.sendFile(
+//       path.join(__dirname, "../frontend/dist/index.html"),
+//       function (err) {
+//         if (err) {
+//           console.log(err);
+//           res.status(500).send(err);
+//         }
+//       }
+//     );
 
-})
+// })
 // Start the server
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);

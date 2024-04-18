@@ -12,7 +12,7 @@ function LinkInput() {
       );
   return (
 
-    <Input addonBefore={selectBefore} addonAfter=".com" defaultValue="distropackagemanager" />
+    <Input addonBefore={selectBefore} addonAfter=":5001" defaultValue="distropackagemanager" />
 
   )
 }

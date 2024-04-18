@@ -5,14 +5,14 @@ import {
   Drawer,
   Input,
   Space,
+  notification,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Table } from "antd";
-import type {  TableColumnsType, TableProps } from "antd";
-import LinkInput from "../../components/linkInput/LinkInput";
+import type {   TableColumnsType, TableProps } from "antd";
 import newRequest from "../../utils/newRequest";
 
-interface Backend {
+export interface Backend {
   id: Number;
   backEndTitle: string;
   backEndUrl:string;
@@ -41,8 +41,16 @@ const columns: TableColumnsType<Backend> = [
 
 
 
-function BackEndList() {
 
+function BackEndList() {
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotificationWithIcon = (message:String,description:String) => {
+    api.success({
+      message,
+      description
+    });
+  };
 
   const [data, setData] = useState<Backend[]>([]);
 
@@ -59,8 +67,10 @@ function BackEndList() {
     console.log("params", pagination, filters, sorter, extra);
   };
 
+
+
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log(newSelectedRowKeys);
+    console.log(newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -86,11 +96,29 @@ function BackEndList() {
   const onClose = () => {
     setOpen(false);
   };
+  
+  const [backEndTitle, setBackEndTitle] = useState("");
+  const [backEndUrl, setBackEndUrl] = useState("");
+
+  
+  const handleSubmitClick=()=>{
+    newRequest.post("/backend/add",{
+      backEndTitle:backEndTitle,
+      backEndUrl:backEndUrl
+    }).then((res)=>{
+      setData(prevData=>[...prevData,res.data.backEnd])
+      openNotificationWithIcon("Added Backend","Added Backend Successfully!")
+      onClose()
+    })
+  }
 
 
   useEffect(()=>{
     newRequest.get("backend").then((res)=>{
-      setData(res.data.backEnds);
+
+      setData(res.data.backEnds.map((backend:Backend,index:number)=>{
+        return {...backend,key:backend.id}
+      }));
     })
   },[])
 
@@ -104,6 +132,8 @@ function BackEndList() {
         display: "flex",
       }}
     >
+            {contextHolder}
+
       <Card
         title={"Backends"}
         style={{ width: "100%", height: "80%" }}
@@ -150,15 +180,19 @@ function BackEndList() {
         <Space direction="vertical" size="middle" style={{ display: "flex" }}>
           <div>
             <label>Backend Name:</label>
-            <Input placeholder="Backend Name" />
+            <Input placeholder="Backend Name" value={backEndTitle} onChange={(e)=>{
+              setBackEndTitle(e.target.value)
+            }}/>
           </div>
           <div>
             <label>Backend URL:</label>
-            <LinkInput />
+            <Input placeholder="archive.ubuntu.com" value={backEndUrl} onChange={(e)=>{
+              setBackEndUrl(e.target.value)
+            }}/>
           </div>
 
 
-          <Button type="primary">Submit</Button>
+          <Button type="primary" onClick={handleSubmitClick}>Submit</Button>
         </Space>
       </Drawer>
     </div>
