@@ -72,15 +72,7 @@ class CustomDrawer extends StatelessWidget {
               Get.toNamed(Routes.STATISTICS);
             },
           ),
-          ListTile(
-            title: Text(
-              'Home',
-              style: TextStyle(color: Colors.black),
-            ),
-            onTap: () {
-              Get.toNamed(Routes.HOME);
-            },
-          ),
+
 
 
         ],

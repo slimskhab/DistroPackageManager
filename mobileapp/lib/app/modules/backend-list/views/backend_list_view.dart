@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -29,7 +30,38 @@ class BackendListView extends GetView<BackendListController> {
                         Row(
                           children: [
                             PrimaryButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  showDialog(context: (context), builder: (BuildContext context){
+                                    return AlertDialog(
+                                      title: Text("Add New Backend"),
+                                      content: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                         mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text("Backend Name"),
+                                                TextFormField(),
+                                              ],
+                                            ),
+                                            SizedBox(height: 10,),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+
+                                              children: [
+                                                Text("Backend Url"),
+                                                TextFormField(),
+                                              ],
+                                            ),
+                                            SizedBox(height: 10,),
+                                            Align(alignment: Alignment.centerRight,child: PrimaryButton(onPressed: (){}, title: "Submit", isLoading: false))
+                                          ],
+                                        ),
+
+                                    );
+                                  });
+                                },
                                 title: "Add New Backend",
                                 isLoading: false)
                           ],

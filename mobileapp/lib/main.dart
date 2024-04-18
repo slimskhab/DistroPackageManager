@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ustudy/app/AppColors.dart';
 
 import 'app/routes/app_pages.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,6 +19,18 @@ void main() async{
       theme: ThemeData(
         iconTheme: IconThemeData(color: Colors.black),
         scaffoldBackgroundColor: Colors.white,
+        textSelectionTheme: TextSelectionThemeData(
+            cursorColor: AppColors.primaryColor,
+          selectionColor: AppColors.primaryColor
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          focusColor: AppColors.primaryColor,
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.blue, // Change focused border color to blue
+            ),
+          )
+        ),
         textTheme: TextTheme(
           displayLarge: GoogleFonts.nunito(color:Colors.black),
           displayMedium: GoogleFonts.nunito(color:Colors.black),
