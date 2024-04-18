@@ -5,10 +5,12 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import Sidebar from "./components/sidebar/Sidebar";
 import Stats from "./pages/stats/Stats";
 import RepositoryList from "./pages/repository-list/RepositoryList";
-import ProxyServerSettings from "./pages/settings/proxy-server-settings/ProxyServerSettings";
-import CacheAdministration from "./pages/settings/cache-administration/CacheAdministration";
+
 import Shell from "./pages/shell/Shell";
 import PackageList from "./pages/package-list/PackageList";
+import BackEndList from "./pages/backend-list/BackEndList";
+import Security from "./pages/settings/security/Security";
+import GeneralSettings from "./pages/settings/general-settings/GeneralSettings";
 
 function App() {
   return (
@@ -25,9 +27,10 @@ function App() {
         <Route path="/stats" element={<Stats />} />
         <Route path="/repository-list" element={<RepositoryList />} />
         <Route path="/package-list" element={<PackageList />} />
+        <Route path="/backend-list" element={<BackEndList />} />
 
-        <Route path="/proxy-server-settings" element={<ProxyServerSettings />} />
-        <Route path="/cache-administration" element={<CacheAdministration />} />
+        <Route path="/general-settings" element={<GeneralSettings />} />
+        <Route path="/security" element={<Security/>} />
         <Route path="/shell" element={<Shell />} />
 
 

@@ -1,12 +1,1 @@
-/target/
-/ubuntu
-# Cargo.lock file
-Cargo.lock
-
-# Generated documentation
-/doc/
-
-# IDE/Editor specific files
-/.idea/
-.vscode/
-*.iml
+/node_modules

@@ -9,17 +9,18 @@ import {
   Space,
   Tag,
 } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import type { MenuProps, TableColumnsType, TableProps } from "antd";
 import LinkInput from "../../components/linkInput/LinkInput";
+import newRequest from "../../utils/newRequest";
 
 interface Repository {
-  key: React.Key;
-  name: string;
-  size: number;
-  creationDate: string;
+  id:number;
+  repositoryTitle: string;
   numberOfPackages: number;
+  repositorySize: string;
+  repostioryStatus: number;
   statuses: string[];
 }
 
@@ -77,27 +78,11 @@ const columns: TableColumnsType<Repository> = [
   },
 ];
 
-const data: Repository[] = [
-  {
-    key: "1",
-    name: "toto",
-    numberOfPackages: 50,
-    statuses: ["Active"],
-    creationDate: new Date(2000, 0, 1).toLocaleDateString(), // Month is zero-based index (0 for January)
-    size: 90,
-  },
-  {
-    key: "2",
-    name: "koko",
-    size: 98,
-    creationDate: new Date(2000, 0, 1).toLocaleDateString(), // Month is zero-based index (0 for January)
-    statuses: ["Inactive"],
-    numberOfPackages: 99,
-  },
-];
+
 
 function RepositoryList() {
-  // Drawer
+  const [data, setData] = useState<Repository[]>([]);
+
   const [open, setOpen] = useState(false);
 
   const showDrawer = () => {
@@ -202,6 +187,14 @@ function RepositoryList() {
     }
     return null;
   };
+
+useEffect(()=>{
+  newRequest.get("repository").then((res)=>{
+    setData(res.data.repositories);
+    
+  })
+},[])
+
   return (
     <div
       style={{

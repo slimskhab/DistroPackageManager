@@ -164,7 +164,32 @@ function PackageList() {
   };
 
 
-
+  const [repository, setRepository] = useState<string>(
+    "All"
+  );
+  const repositoryItems: MenuProps["items"] = [
+    {
+      label: "All",
+      key: "1",
+    },
+    {
+      label: "Repo 1",
+      key: "2",
+    },
+    {
+      label: "Repo 2",
+      key: "3",
+    },
+    {
+      label: "Repo 3",
+      key: "4",
+    },
+  ];
+  const handleRepositoryMenuClick: MenuProps["onClick"] = (e) => {
+    setRepository(
+      repositoryItems.find((item) => item.key === e.key).label
+    );
+  };
 
 
   return (
@@ -182,6 +207,18 @@ function PackageList() {
         style={{ width: "100%", height: "80%" }}
         extra={
           <Space style={{ display: "flex", flexWrap: "wrap" }}>
+            <Dropdown
+              menu={{
+                items: repositoryItems,
+                onClick: handleRepositoryMenuClick,
+              }}
+              trigger={["click"]}
+            >
+              <Button style={{ textAlign: "start" }}>
+                {repository}
+                <DownOutlined />
+              </Button>
+            </Dropdown>
             {hasSelected && (
               <Button
                 type="primary"
