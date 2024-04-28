@@ -1,5 +1,4 @@
 import { Input, Select } from 'antd';
-import React from 'react'
 
 function LinkInput() {
     const { Option } = Select;

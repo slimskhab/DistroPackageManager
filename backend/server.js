@@ -9,9 +9,10 @@ dotenv.config();
 const app = express();
 const port = 5001;
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: true,
   credentials: true
 }));
+
 
 app.use(bodyParser.json());
 const _dirname = path.dirname("")
@@ -44,18 +45,18 @@ db.once('open', () => {
 });
 
 
-// app.get("/*", function(req, res){
-//   res.sendFile(
-//       path.join(__dirname, "../frontend/dist/index.html"),
-//       function (err) {
-//         if (err) {
-//           console.log(err);
-//           res.status(500).send(err);
-//         }
-//       }
-//     );
+app.get("/*", function(req, res){
+  res.sendFile(
+      path.join(__dirname, "../frontend/dist/index.html"),
+      function (err) {
+        if (err) {
+          console.log(err);
+          res.status(500).send(err);
+        }
+      }
+    );
 
-// })
+})
 // Start the server
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);

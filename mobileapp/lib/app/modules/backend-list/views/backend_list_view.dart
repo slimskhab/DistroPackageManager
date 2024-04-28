@@ -42,7 +42,9 @@ class BackendListView extends GetView<BackendListController> {
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Text("Backend Name"),
-                                                TextFormField(),
+                                                TextFormField(
+                                                  controller: controller.name,
+                                                ),
                                               ],
                                             ),
                                             SizedBox(height: 10,),
@@ -51,11 +53,11 @@ class BackendListView extends GetView<BackendListController> {
 
                                               children: [
                                                 Text("Backend Url"),
-                                                TextFormField(),
+                                                TextFormField(controller: controller.url,),
                                               ],
                                             ),
                                             SizedBox(height: 10,),
-                                            Align(alignment: Alignment.centerRight,child: PrimaryButton(onPressed: (){}, title: "Submit", isLoading: false))
+                                            Align(alignment: Alignment.centerRight,child: PrimaryButton(onPressed: (){controller.addBackEnd();}, title: "Submit", isLoading: false))
                                           ],
                                         ),
 
@@ -78,14 +80,15 @@ class BackendListView extends GetView<BackendListController> {
                           DataColumn(label: Expanded(child: Text('N° Repos',overflow: TextOverflow.ellipsis,))),
                         ],
                         rows: [
-                          DataRow(cells: [
-                            DataCell(
-                              Text('#1'),
-                            ),
-                            DataCell(Text('Title goes here')),
-                            DataCell(Text('localhost:5001')),
-                            DataCell(Text('0')),
-                          ]),
+                          for(var i=0;i<controller.backEnds.length;i++)
+                            DataRow(cells: [
+                              DataCell(
+                                Text(controller.backEnds[i]["id"].toString()),
+                              ),
+                              DataCell(Text(controller.backEnds[i]["backEndTitle"])),
+                              DataCell(Text(controller.backEnds[i]["backEndUrl"])),
+                              DataCell(Text(controller.backEnds[i]["associatedNumberOfRepos"].toString())),
+                            ]),
                         ],
                       ),
                     ),

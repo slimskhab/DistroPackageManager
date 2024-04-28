@@ -20,9 +20,9 @@ export interface Repository {
   id:number;
   repositoryTitle: string;
   numberOfPackages: number;
-  repositorySize: string;
-  repostioryStatus: number;
-  repositoryStatus: string[];
+  repositorySize: number;
+  repositoryStatus: string;
+  createdAt:Date;
 }
 
 const columns: TableColumnsType<Repository> = [
@@ -32,9 +32,9 @@ const columns: TableColumnsType<Repository> = [
   },
   {
     title: "Size",
-    dataIndex: "repostiorySize",
+    dataIndex: "repositorySize",
     sorter: {
-      compare: (a, b) => a.size - b.size,
+      compare: (a, b) => a.repositorySize - b.repositorySize,
       multiple: 2,
     },
   },
@@ -43,8 +43,8 @@ const columns: TableColumnsType<Repository> = [
     dataIndex: "createdAt",
     sorter: {
       compare: (a, b) => {
-        const dateA = new Date(a.creationDate).getTime();
-        const dateB = new Date(b.creationDate).getTime();
+        const dateA = new Date(a.createdAt).getTime();
+        const dateB = new Date(b.createdAt).getTime();
         return dateA - dateB;
       },
       multiple: 3,
@@ -64,16 +64,8 @@ const columns: TableColumnsType<Repository> = [
     filterDropdown: true,
     render: (_, { repositoryStatus }) => (
       <>
-        { repositoryStatus.map((status) => {
-          switch (status) {
-            case "Active":
-              return <Tag color="green">Active</Tag>;
-            case "Inactive":
-              return <Tag color="volcano">Inactive</Tag>;
-            default:
-              return <Tag color="blue">Unknown</Tag>;
-          }
-        })}
+      {repositoryStatus==="Active"?<Tag color="green">Active</Tag>:<Tag color="blue">Unknown</Tag>}
+       
       </>
     ),
   },
@@ -154,9 +146,11 @@ function RepositoryList() {
     },
   ];
   const handlePurgingPolicyMenuClick: MenuProps["onClick"] = (e) => {
-    setPurgingPolicy(
-      purgingPolicyItems.find((item) => item.key === e.key).label
-    );
+    const selectedItem = purgingPolicyItems.find((item:any) => item.key === e.key);
+    if (selectedItem && 'label' in selectedItem) {
+      const label = selectedItem.label as string; // Type assertion
+      setPurgingPolicy(label);
+    }
   };
 
   const [retentionPolicy, setRetentionPolicy] = useState<string>(
@@ -177,9 +171,11 @@ function RepositoryList() {
     },
   ];
   const handleRetentionPolicyMenuClick: MenuProps["onClick"] = (e) => {
-    setRetentionPolicy(
-      retentionPolicyItems.find((item) => item.key === e.key).label
-    );
+    const selectedItem = retentionPolicyItems.find((item:any) => item.key === e.key);
+    if (selectedItem && 'label' in selectedItem) {
+      const label = selectedItem.label as string; // Type assertion
+      setRetentionPolicy(label);
+    }
   };
 
 
@@ -187,9 +183,14 @@ function RepositoryList() {
   );
   const [backEndItems,setBackEndItems] =useState<MenuProps["items"]>([])
   const handleBackEndMenuClick: MenuProps["onClick"] = (e) => {
-    setBackEnd(
-      backEndItems.find((item) => item.key === e.key).label
-    );
+    if(!backEndItems){
+      return;
+    }
+    const selectedItem = backEndItems.find((item:any) => item.key === e.key);
+    if (selectedItem && 'label' in selectedItem) {
+      const label = selectedItem.label as string; // Type assertion
+      setBackEnd(label);
+    }
   };
 
   const formatter = (value?: number | undefined): React.ReactNode => {
@@ -203,6 +204,7 @@ useEffect(()=>{
   setLoading(true);
   newRequest.get("/repository").then((res)=>{
     setData(res.data.repositories);
+    console.log(res.data.repositories)
   }).finally(()=>{
     setLoading(false);
   })

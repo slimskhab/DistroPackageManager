@@ -40,7 +40,7 @@ class RepositoryListView extends GetView<RepositoryListController> {
                                           Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Text("Backend Name"),
+                                              Text("Repository Name"),
                                               TextFormField(),
                                             ],
                                           ),
@@ -49,8 +49,36 @@ class RepositoryListView extends GetView<RepositoryListController> {
                                             crossAxisAlignment: CrossAxisAlignment.start,
 
                                             children: [
-                                              Text("Backend Url"),
+                                              Text("Repository Url"),
                                               TextFormField(),
+                                            ],
+                                          ),
+                                          SizedBox(height: 10,),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+
+                                            children: [
+                                              Text("Back-end Url"),
+
+                                      DropdownButton(
+                                          value: controller.currentBackEnd,
+                                          items: controller.backEndList
+                                              .map((e) => DropdownMenuItem(
+                                            child: Text(
+                                              e.toString(),
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                            value: e,
+                                          ))
+                                              .toList(),
+                                          onChanged: (element) {
+                                            controller.currentBackEnd = element!;
+                                            controller.update();
+                                          }),
+
+
+
                                             ],
                                           ),
                                           SizedBox(height: 10,),
@@ -71,20 +99,21 @@ class RepositoryListView extends GetView<RepositoryListController> {
                     Expanded(
                       child: DataTable(
                         columns: [
-                          DataColumn(label: Text('Id')),
-                          DataColumn(label: Text('Title')),
-                          DataColumn(label: Text('Url')),
-                          DataColumn(label: Expanded(child: Text('N° Repos',overflow: TextOverflow.ellipsis,))),
+                          DataColumn(label: Text('Name')),
+                          DataColumn(label: Text('Size')),
+                          DataColumn(label: Expanded(child:Text('N° Packages',overflow: TextOverflow.ellipsis,))),
+                          DataColumn(label: Expanded(child: Text('Status',overflow: TextOverflow.ellipsis,))),
                         ],
                         rows: [
-                          DataRow(cells: [
-                            DataCell(
-                              Text('#1'),
-                            ),
-                            DataCell(Text('Title goes here')),
-                            DataCell(Text('localhost:5001')),
-                            DataCell(Text('0')),
-                          ]),
+                          for(var i=0;i<controller.repositories.length;i++)
+                            DataRow(cells: [
+                              DataCell(
+                                Text(controller.repositories[i]["repositoryTitle"]),
+                              ),
+                              DataCell(Text(controller.repositories[i]["repositorySize"].toString())),
+                              DataCell(Text(controller.repositories[i]["numberOfPackages"].toString())),
+                              DataCell(Text(controller.repositories[i]["repositoryStatus"])),
+                            ]),
                         ],
                       ),
                     ),

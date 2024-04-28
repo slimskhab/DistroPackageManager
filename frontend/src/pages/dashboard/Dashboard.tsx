@@ -1,8 +1,6 @@
-import React from "react";
-import Sidebar from "../../components/sidebar/Sidebar";
-import { Card, Col, FloatButton, Space, Statistic, Table } from "antd";
-import { Flex, Progress, Tooltip } from "antd";
-import { BarChartOutlined, EditOutlined, LikeOutlined, PlusCircleFilled, PlusCircleOutlined, PlusOutlined, QuestionCircleOutlined, UserOutlined } from "@ant-design/icons";
+import { Card,  FloatButton, Space, Statistic, Table } from "antd";
+import {  Progress, Tooltip } from "antd";
+import { BarChartOutlined, EditOutlined, UserOutlined } from "@ant-design/icons";
 const dataSource = [
   {
     key: "1",

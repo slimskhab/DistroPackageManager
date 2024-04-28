@@ -1,6 +1,6 @@
 import { DownOutlined } from "@ant-design/icons";
-import { Button, Card, Dropdown, Input } from "antd";
-import React, { useState } from "react";
+import { Button, Card, Dropdown, Input, MenuProps } from "antd";
+import { useState } from "react";
 
 function GeneralSettings() {
   const [language, setLanguage] = useState<string>("English");
@@ -23,9 +23,14 @@ function GeneralSettings() {
     },
   ];
 
-  const handleLanguageMenuClick: MenuProps["onClick"] = (e) => {
-    setLanguage(languageItems.find((item) => item.key === e.key).label);
+  const handleLanguageMenuClick: MenuProps["onClick"] = (e:any) => {
+    const selectedItem = languageItems.find((item:any) => item.key === e.key);
+    if (selectedItem && 'label' in selectedItem) {
+      const label = selectedItem.label as string; // Type assertion
+      setLanguage(label);
+    }
   };
+  
 
   const [dateFormat, setDateFormat] = useState<string>("ISO 8601");
   const dateFormatItems: MenuProps["items"] = [
@@ -55,9 +60,14 @@ function GeneralSettings() {
     },
   ];
 
-  const handleDateFormatMenuClick: MenuProps["onClick"] = (e) => {
-    setDateFormat(dateFormatItems.find((item) => item.key === e.key).label);
+  const handleDateFormatMenuClick: MenuProps["onClick"] = (e:any) => {
+    const selectedItem = dateFormatItems.find((item:any) => item.key === e.key);
+    if (selectedItem && 'label' in selectedItem) {
+      const label = selectedItem.label as string; // Type assertion
+      setDateFormat(label);
+    }
   };
+  
 
 
   const [userAuthentication, setUserAuthentication] = useState<string>("Mandatory");
@@ -73,9 +83,14 @@ function GeneralSettings() {
 
   ];
 
-  const handleUserAuthenticationMenuClick: MenuProps["onClick"] = (e) => {
-    setUserAuthentication(userAuthenticationItems.find((item) => item.key === e.key).label);
+  const handleUserAuthenticationMenuClick: MenuProps["onClick"] = (e:any) => {
+    const selectedItem = userAuthenticationItems.find((item:any) => item.key === e.key);
+    if (selectedItem && 'label' in selectedItem) {
+      const label = selectedItem.label as string; // Type assertion
+      setUserAuthentication(label);
+    }
   };
+  
 
 
 

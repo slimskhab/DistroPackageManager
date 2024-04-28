@@ -7,7 +7,7 @@ import {
   Space,
   notification,
 } from "antd";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import type {   TableColumnsType, TableProps } from "antd";
 import newRequest from "../../utils/newRequest";
@@ -116,7 +116,7 @@ function BackEndList() {
   useEffect(()=>{
     newRequest.get("backend").then((res)=>{
 
-      setData(res.data.backEnds.map((backend:Backend,index:number)=>{
+      setData(res.data.backEnds.map((backend:Backend)=>{
         return {...backend,key:backend.id}
       }));
     })

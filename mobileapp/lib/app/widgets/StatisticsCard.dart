@@ -20,7 +20,7 @@ class StatisticsCard extends StatelessWidget {
         children: [
           Container(
             padding: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
-            child: Text(title,style: TextStyle(fontWeight: FontWeight.w700,fontSize: 20)),
+            child: Text(title,style: TextStyle(fontWeight: FontWeight.w700,fontSize: 16)),
           ),
           Row(
             children: [

@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - DBURI=mongodb+srv://admin:n7p3aF04kHUO60Ak@natty-scan.4sqxahy.mongodb.net/DistroPackageManager?retryWrites=true&w=majority
+    volumes:
+      - ./backend:/usr/src/app/backend
+    depends_on:
+      - database
+
+  database:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:

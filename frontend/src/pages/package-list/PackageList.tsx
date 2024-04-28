@@ -1,17 +1,8 @@
 import { DeleteOutlined, DownOutlined, RedoOutlined } from "@ant-design/icons";
-import {
-  Button,
-  Card,
-  Drawer,
-  Dropdown,
-  Input,
-  Progress,
-  Space,
-  Tag,
-} from "antd";
+import { Button, Card, Dropdown, Input, Progress, Space, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import { Table } from "antd";
-import type { TableColumnsType, TableProps } from "antd";
+import type { MenuProps, TableColumnsType, TableProps } from "antd";
 import newRequest from "../../utils/newRequest";
 import { Repository } from "../repository-list/RepositoryList";
 
@@ -131,47 +122,79 @@ function PackageList() {
   };
 
   const [repository, setRepository] = useState<string>("All");
-  const [repositoryItems,setRepositoryItems] =useState<MenuProps["items"]>([
-    {label:"All",key:"-1"}
-  ])
+  const [repositoryItems, setRepositoryItems] = useState<MenuProps["items"]>([
+    { label: "All", key: "-1" },
+  ]);
 
   const handleRepositoryMenuClick: MenuProps["onClick"] = (e) => {
-    const repoName=repositoryItems.find((item) => item.key === e.key)
-
-    if(e.key==="-1"){
-      setFilteredData(data);
-    }else{
-      setFilteredData(data.filter((element,index)=>{
-        console.log(repoName.label);
-        console.log(element.packageRepository)
-        return element.packageRepository===repoName.label
-      }))
+    if (!repositoryItems) {
+      return;
     }
-    setRepository(repoName.label);
+    const repoName = repositoryItems.find((item: any) => item.key === e.key);
 
+    if (e.key === "-1") {
+      setFilteredData(data);
+    } else {
+      setFilteredData(
+        data.filter((element) => {
+          if (!repoName) {
+            return;
+          }
+          if (repoName && "label" in repoName) {
+            const label = repoName.label as string; // Type assertion
+            return element.packageRepository === label;
+          }
+        })
+      );
+    }
+    if (!repoName) {
+      return;
+    }
+    if (repoName && "label" in repoName) {
+      const label = repoName.label as string; // Type assertion
+
+      setRepository(label);
+    }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     setLoading(true);
-    newRequest.get("/package").then((response) => {
-      setData(response.data.packages)
-      setFilteredData(response.data.packages)
-    }).finally(()=>{
-      setLoading(false);
-    })
 
-    setLoading(true)
-    newRequest.get("/repository").then((response) => {
-      setRepositoryItems([...response.data.repositories.map((e:Repository,i:number)=>{
-  
-        return {label:e.repositoryTitle,key:i.toString()}
-      }),...repositoryItems])
-    }).finally(()=>{
-      setRepository("All")
+    // Fetch packages
+    newRequest
+      .get("/package")
+      .then((response) => {
+        setData(response.data.packages);
+        setFilteredData(response.data.packages);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
 
-      setLoading(false);
-    })
-  },[])
+    setLoading(true);
+
+    // Fetch repositories
+    newRequest
+      .get("/repository")
+      .then((response) => {
+        const newRepositoryItems = response.data.repositories.map(
+          (e: Repository, i: number) => {
+            return { label: e.repositoryTitle, key: i.toString() };
+          }
+        );
+
+        // Check if repositoryItems is defined, if not, initialize it
+        if (repositoryItems) {
+          setRepositoryItems([...newRepositoryItems, ...repositoryItems]);
+        } else {
+          setRepositoryItems(newRepositoryItems);
+        }
+      })
+      .finally(() => {
+        setRepository("All");
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <div

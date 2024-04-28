@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import  { useState, useEffect, useRef } from 'react';
 import './Shell.css';
 import axios from 'axios';
 function Shell() {
@@ -14,12 +14,14 @@ function Shell() {
     scrollToBottom();
   }, [shellCommands]);
 
-  const inputRef = useRef();
-  const consoleBodyRef = useRef();
-
+  const inputRef = useRef<HTMLInputElement>(null);
+  const consoleBodyRef = useRef<HTMLInputElement>(null);
   const scrollToBottom = () => {
-    consoleBodyRef.current.scrollTop = consoleBodyRef.current.scrollHeight;
+    if (consoleBodyRef.current) {
+      consoleBodyRef.current.scrollTop = consoleBodyRef.current.scrollHeight;
+    }
   };
+  
 
 
 
@@ -47,7 +49,7 @@ function Shell() {
 
       })
       .catch(error => {
-        console.log("catched here");
+        console.log(error);
         const headers = {
           'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY2}`,
           'Content-Type': 'application/json'
@@ -69,7 +71,7 @@ function Shell() {
     
           })
           .catch(error => {
-            console.log("error");
+            console.log(error);
     
             setShellCommands(prevshellCommands=>[...prevshellCommands,{ "role": "system", "content": "Connection error"}])
     
@@ -115,7 +117,11 @@ function Shell() {
 
   return (
     <div style={{width:"80%"}}>
-      <div className="console" style={{ cursor: 'pointer' }} onClick={() => inputRef.current.focus()}>
+      <div className="console" style={{ cursor: 'pointer' }} onClick={() => {
+        if(inputRef.current){
+          inputRef.current.focus()
+        }
+      }}>
         <header>
           <p>admin@DistroPackageManager</p>
         </header>

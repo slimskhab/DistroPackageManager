@@ -16,15 +16,15 @@ const RepositorySchema = mongoose.Schema({
         required: true,
         default:0,
     },
-    repostiorySize: {
+    repositorySize: {
         type: Number,
         required: true,
         default: 0,
     },
     repositoryStatus:{
-        type:[String],
+        type:String,
         required:true,
-        default:["Active"]
+        default:"Active"
     },
     repositoryBackEnd:{
         type:String,

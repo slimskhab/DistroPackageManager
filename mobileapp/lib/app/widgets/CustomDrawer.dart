@@ -19,6 +19,11 @@ class CustomDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
+          Container(
+            child:Image.asset("assets/logo.png"),
+            padding:EdgeInsets.only(top:20)
+          ),
+
           ListTile(
             title: Text(
               'Dashboard',
@@ -61,7 +66,7 @@ class CustomDrawer extends StatelessWidget {
               style: TextStyle(color: Colors.black),
             ),
             onTap: () {
-              Get.toNamed(Routes.SHELL);
+              Get.offAllNamed(Routes.SHELL);
             },
           ),ListTile(
             title: Text(

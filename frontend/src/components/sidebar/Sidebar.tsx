@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  MailOutlined,
+
   SettingOutlined,
   PieChartOutlined,
   DashboardOutlined,
@@ -10,8 +10,8 @@ import {
 
 } from "@ant-design/icons";
 import "./Sidebar.css"
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import logoIcon from '../../assets/logo.webp';
+import { Link} from 'react-router-dom';
+import logoIcon from '../../assets/logo.png';
 
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
@@ -74,7 +74,7 @@ const Sidebar: React.FC = () => {
       }}
       theme={'light'}
       >
-                <img src={logoIcon} alt="Logo" style={{ height: '40px',padding:30 }} />
+                <img src={logoIcon} alt="Logo" style={{ height: '50px',padding:30 }} />
 
  <Menu
       onClick={onClick}
