@@ -30,7 +30,8 @@ app.use("/backend", BackEndRouter)
 const RepositoryRouter = require("./routes/RepositoryRoutes")
 app.use("/repository", RepositoryRouter)
 
-const PackageRouter = require("./routes/PackageRoutes")
+const PackageRouter = require("./routes/PackageRoutes");
+const { downloadPackage } = require('./controllers/PackageController');
 app.use("/package", PackageRouter)
 
 mongoose.connect(process.env.DBURI);
@@ -44,6 +45,7 @@ db.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
+app.get("/:path*",downloadPackage)
 
 app.get("/*", function(req, res){
   res.sendFile(
