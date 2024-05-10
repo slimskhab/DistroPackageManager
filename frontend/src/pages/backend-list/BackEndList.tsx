@@ -13,7 +13,7 @@ import type {   TableColumnsType, TableProps } from "antd";
 import newRequest from "../../utils/newRequest";
 
 export interface Backend {
-  id: Number;
+  id: React.Key;
   backEndTitle: string;
   backEndUrl:string;
   associatedNumberOfRepos: number;

@@ -51,7 +51,7 @@ function Shell() {
       .catch(error => {
         console.log(error);
         const headers = {
-          'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY2}`,
+          'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
           'Content-Type': 'application/json'
         };
         

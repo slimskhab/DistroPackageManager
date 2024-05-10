@@ -15,6 +15,7 @@ import type { MenuProps, TableColumnsType, TableProps } from "antd";
 import LinkInput from "../../components/linkInput/LinkInput";
 import newRequest from "../../utils/newRequest";
 import { Backend } from "../backend-list/BackEndList";
+import { bytesToSize } from "../package-list/PackageList";
 
 export interface Repository {
   id:number;
@@ -26,6 +27,8 @@ export interface Repository {
 }
 
 const columns: TableColumnsType<Repository> = [
+  {title:"ID",dataIndex:"id",},
+
   {
     title: "Name",
     dataIndex: "repositoryTitle",
@@ -37,6 +40,8 @@ const columns: TableColumnsType<Repository> = [
       compare: (a, b) => a.repositorySize - b.repositorySize,
       multiple: 2,
     },
+    render: (size) => bytesToSize(size),
+
   },
   {
     title: "Creation Date",
@@ -49,6 +54,9 @@ const columns: TableColumnsType<Repository> = [
       },
       multiple: 3,
     },
+    render: (_, { createdAt }) => (
+      <>{createdAt ? new Date(createdAt).toLocaleString() : ""}</>
+    ),
   },
   {
     title: "Number of Packages",
@@ -99,7 +107,6 @@ function RepositoryList() {
   };
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log(newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -203,7 +210,9 @@ function RepositoryList() {
 useEffect(()=>{
   setLoading(true);
   newRequest.get("/repository").then((res)=>{
-    setData(res.data.repositories);
+    setData(res.data.repositories.map((repository:Repository)=>{
+      return {...repository,key:repository.id}
+    }));
     console.log(res.data.repositories)
   }).finally(()=>{
     setLoading(false);

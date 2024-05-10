@@ -96,11 +96,13 @@ const downloadPackage = async (req, res) => {
   }
 
   try {
-      const packageExists = await Package.findOne({ packageName: fileName, packageStatus: "Available" })
+      const packageExists = await Package.findOne({ packageName: fileName, status: "Available" })
       if (packageExists) {
           console.log(`Package exists: ${packageExists.packageName}`);
           const filePathOnServer = path.join(downloadsDirectory, fileName);
-          packageExists.downloadCount++;
+          packageExists.numberOfDownloads++;
+          packageExists.hits++;
+          packageExists.hitMissRate=packageExists.hits/packageExists.numberOfDownloads
           await packageExists.save();
 
           res.setHeader('Content-Type', 'application/octet-stream');
@@ -141,11 +143,14 @@ const downloadPackage = async (req, res) => {
                   { new: true, upsert: true }
               );
 
+              const repository=await Repository.findOneAndUpdate({repositoryTitle:"Repo 1"},{ $inc: { numberOfPackages: 1,repositorySize: fileSizeInBytes}})
+
               const newPackage = new Package({
                   id: counter.seq,
                   packageName: fileName,
-                  downloadCount: 0,
-                  hitMissRatio: 1,
+                  numberOfDownloads: 1,
+                  hitMissRate: 1,
+                  misses:1,
                   packageStatus: 'Available',
                   packageSize: fileSizeInBytes,
                   packageRepository: "Repo 1"

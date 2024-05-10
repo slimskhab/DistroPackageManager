@@ -26,6 +26,16 @@ const PackageSchema = mongoose.Schema({
         required: true,
         default:0
     },
+    hits:{
+        type:Number,
+        required:true,
+        default:0,
+    },
+    misses:{
+        type:Number,
+        required:true,
+        default:0,
+    },
     hitMissRate:{
         type:Number,
         required:true,

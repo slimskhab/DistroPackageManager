@@ -6,8 +6,8 @@ import type { MenuProps, TableColumnsType, TableProps } from "antd";
 import newRequest from "../../utils/newRequest";
 import { Repository } from "../repository-list/RepositoryList";
 
-interface Package {
-  key: React.Key;
+export interface Package {
+  id: number;
   packageName: string;
   packageSize: number;
   createdAt: Date;
@@ -18,6 +18,7 @@ interface Package {
 }
 
 const columns: TableColumnsType<Package> = [
+  {title:"ID",dataIndex:"id",},
   {
     title: "Name",
     dataIndex: "packageName",
@@ -29,6 +30,8 @@ const columns: TableColumnsType<Package> = [
       compare: (a, b) => a.packageSize - b.packageSize,
       multiple: 2,
     },
+    render: (size) => bytesToSize(size),
+
   },
   {
     title: "Fetch Date",
@@ -42,7 +45,7 @@ const columns: TableColumnsType<Package> = [
       multiple: 3,
     },
     render: (_, { createdAt }) => (
-      <>{<div>{createdAt.toLocaleString()}</div>}</>
+      <>{createdAt ? new Date(createdAt).toLocaleString() : ""}</>
     ),
   },
   {
@@ -87,7 +90,12 @@ const columns: TableColumnsType<Package> = [
     ),
   },
 ];
-
+export  const bytesToSize = (bytes: number): string => {
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  if (bytes === 0) return '0 Byte';
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + sizes[i];
+};
 function PackageList() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
@@ -101,7 +109,9 @@ function PackageList() {
     console.log("params", pagination, filters, sorter, extra);
   };
 
+ 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    console.log(newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -164,8 +174,12 @@ function PackageList() {
     newRequest
       .get("/package")
       .then((response) => {
-        setData(response.data.packages);
-        setFilteredData(response.data.packages);
+        setData(response.data.packages.map((e:Package)=>{
+          return {...e,key:e.id}
+        }));
+        setFilteredData(response.data.packages.map((e:Package)=>{
+          return {...e,key:e.id}
+        }));
       })
       .finally(() => {
         setLoading(false);
@@ -207,6 +221,7 @@ function PackageList() {
       }}
     >
       <Card
+      loading={loading}
         title={"Packages"}
         style={{ width: "100%", height: "80%" }}
         extra={
