@@ -22,12 +22,12 @@ class HomeView extends GetView<HomeController> {
           builder: (controller) {
             return Container(
               padding: EdgeInsets.all(20),
-              child: GridView(
+              child: controller.isLoading?CircularProgressIndicator():GridView(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,crossAxisSpacing: 10,mainAxisSpacing: 10,),
                 children: [
 StatisticsCard(icon: Icons.file_copy_outlined,title: "N° Repos",content: "Repositories",number: "1.285",),
-                  StatisticsCard(icon: Icons.file_open_outlined,title: "N° Packages",content: "Packages",number: "4.598",),
-                  StatisticsCard(icon: Icons.person_outline,title: "Total Users",content: "Users",number: "285",),
+                  StatisticsCard(icon: Icons.file_open_outlined,title: "N° Packages",content: "Packages",number: controller.stats["totalPackages"] ?? "No Data",),
+                  StatisticsCard(icon: Icons.person_outline,title: "Total Users",content: "Users",number: "1",),
                   Container(
                     decoration: BoxDecoration(
                         color: Colors.white,

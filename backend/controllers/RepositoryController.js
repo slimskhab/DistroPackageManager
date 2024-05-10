@@ -1,7 +1,8 @@
 const Repository = require("../models/RepositoryModel");
 const Counter = require("../models/CounterModel");
 const BackEnd = require("../models/BackEndModel");
-
+const cron = require('node-cron');
+const Notification = require('../models/NotificationModel');
 const addRepository=async(req,res)=>{
     try {
       const {repositoryTitle,repositoryBackEnd}=req.body;
@@ -79,6 +80,37 @@ const deleteRepository = async (req, res) => {
     });
   }
 };
+
+
+
+// Function to check repository sizes and send notifications
+const checkRepositorySizes = async () => {
+  console.log("executed")
+  try {
+    const repositories = await Repository.find({});
+    repositories.forEach(async (repository) => {
+      if (repository.repositorySize > 100 * 1024 * 1024) { // 100 MB in bytes
+        // Send notification
+        const notification = new Notification({
+          notificationContent: `Repository "${repository.repositoryTitle}" size exceeds 100 MB.`,
+          notificationType: 'Repository Size Exceeded',
+        });
+        await notification.save();
+      }
+    });
+  } catch (error) {
+    console.error('Error checking repository sizes:', error);
+  }
+};
+
+// Schedule the function to run every minute
+cron.schedule('* * * * *', checkRepositorySizes);
+
+// Export the function for manual triggering (optional)
+module.exports = {
+  checkRepositorySizes,
+};
+
 
 module.exports = {
   addRepository,

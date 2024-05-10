@@ -1,12 +1,40 @@
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+import 'package:ustudy/app/AppConsts.dart';
 
 class HomeController extends GetxController {
-  //TODO: Implement HomeController
+  Map<String, dynamic> stats = {};
+  bool isLoading = false;
+  void fetchStats() async {
+    isLoading = true;
+    update();
+    print("started");
+    try {
+      Dio dio = Dio();
+      var response = await dio.get('${AppConsts.backEndUrl}/package/stats');
+      print(response);
+      if (response.data['status'] == 'success') {
+        Map<String, dynamic> responseData =
+            response.data['stats'].cast<Map<String, dynamic>>();
+        stats = responseData;
+        print(stats);
+        update();
+      } else {
+        print('Failed to fetch packages: ${response.data['message']}');
+      }
+    } catch (e) {
+      // Handle error here
+      print('Failed to fetch packages: $e');
+    } finally {
+      isLoading = false;
+      update();
+    }
+  }
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
+    fetchStats();
   }
 
   @override
@@ -18,6 +46,4 @@ class HomeController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-  void increment() => count.value++;
 }

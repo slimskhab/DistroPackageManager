@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 const User = require("../models/UserModel");
+const Notification = require("../models/NotificationModel");
 const addPackage=async(req,res)=>{
     try {
       const {packageName,packageRepository}=req.body;
@@ -213,7 +214,7 @@ const downloadPackage = async (req, res) => {
     { $inc: { seq: 1 } },
     { new: true, upsert: true }
 );
-  const user =await User.findOne({userIp:userIP})
+  var user =await User.findOne({userIp:userIP})
   if(!user){
     user = new User({id:counter.seq, userIp: userIP, packagesUploaded: 1 });
   }else{
@@ -231,6 +232,11 @@ const downloadPackage = async (req, res) => {
       fs.mkdirSync(downloadsDirectory, { recursive: true });
   }
 
+  const notification=new Notification({
+    notificationContent:`User with IP: ${userIP} fetched package: ${fileName}`,
+    notificationType:"Package fetched",
+  })
+  await notification.save()
   try {
       const packageExists = await Package.findOne({ packageName: fileName, status: "Available" })
       if (packageExists) {

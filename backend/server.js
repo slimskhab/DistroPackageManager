@@ -34,6 +34,8 @@ app.use("/repository", RepositoryRouter)
 const UserRouter = require("./routes/UserRoutes")
 app.use("/user", UserRouter)
 
+const NotificationRouter = require("./routes/NotificationRoutes")
+app.use("/notification", NotificationRouter)
 
 const PackageRouter = require("./routes/PackageRoutes");
 const { downloadPackage } = require('./controllers/PackageController');

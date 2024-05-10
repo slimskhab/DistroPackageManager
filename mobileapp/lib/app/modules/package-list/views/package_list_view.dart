@@ -39,14 +39,15 @@ class PackageListView extends GetView<PackageListController> {
                           DataColumn(label: Expanded(child: Text('Hit/Miss Rate',overflow: TextOverflow.ellipsis,))),
                         ],
                         rows: [
-                          DataRow(cells: [
-                            DataCell(
-                              Text('Wireshark'),
-                            ),
-                            DataCell(Text('0 mb')),
-                            DataCell(Text('Available')),
-                            DataCell(Text('50%')),
-                          ]),
+                          for(var i=0;i<controller.packages.length;i++)
+                            DataRow(cells: [
+                              DataCell(
+                                Text(controller.packages[i]["id"].toString()),
+                              ),
+                              DataCell(Text(controller.packages[i]["packageName"])),
+                              DataCell(Text(controller.packages[i]["hitMissRate"].toString())),
+                              DataCell(Text(controller.packages[i]["misses"].toString())),
+                            ]),
                         ],
                       ),
                     ),
