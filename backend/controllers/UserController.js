@@ -76,5 +76,24 @@ const loginUser = async (req, res) => {
 
 }
 
+const getAllUsers = async (req, res) => {
+  try {
 
-module.exports = {addUser,loginUser }
+    const users = new User.find({});
+
+
+    res.status(200).json({
+      status: "success",
+      totalUsers:users.length,
+      users
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Server Error!"
+    });
+  }
+}
+
+
+module.exports = {addUser,loginUser,getAllUsers }

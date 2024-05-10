@@ -30,6 +30,11 @@ app.use("/backend", BackEndRouter)
 const RepositoryRouter = require("./routes/RepositoryRoutes")
 app.use("/repository", RepositoryRouter)
 
+
+const UserRouter = require("./routes/UserRoutes")
+app.use("/user", UserRouter)
+
+
 const PackageRouter = require("./routes/PackageRoutes");
 const { downloadPackage } = require('./controllers/PackageController');
 app.use("/package", PackageRouter)

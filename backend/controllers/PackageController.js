@@ -5,6 +5,7 @@ const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
+const User = require("../models/UserModel");
 const addPackage=async(req,res)=>{
     try {
       const {packageName,packageRepository}=req.body;
@@ -80,10 +81,145 @@ const deletePackage = async (req, res) => {
     });
   }
 };
+
+const getRecentlyFetchedPackages = async (req, res) => {
+  try {
+    const recentlyFetchedPackages = await Package.find({}).sort({ updatedAt: -1 }).limit(10);
+    res.status(200).json({
+      status: "success",
+      message: "Recently fetched packages retrieved",
+      packages: recentlyFetchedPackages
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error!" });
+  }
+};
+const getTotalMissRateAndPackageCount = async (req, res) => {
+  try {
+    const packages = await Package.find({});
+    const allRepos = await Repository.find({});
+    
+    let totalMissRate = 0;
+    let totalPackageSize = 0;
+    let totalPackages = packages.length;
+
+    // Initialize variables for biggest and smallest packages
+    let biggestPackage = { packageName: "", packageSize: 0 };
+    let smallestPackage = { packageName: "", packageSize: Infinity };
+
+    packages.forEach(pkg => {
+      totalMissRate += pkg.hitMissRate;
+      totalPackageSize += pkg.packageSize;
+
+      // Update biggest and smallest packages if necessary
+      if (pkg.packageSize > biggestPackage.packageSize) {
+        biggestPackage = { packageName: pkg.packageName, packageSize: pkg.packageSize };
+      }
+      if (pkg.packageSize < smallestPackage.packageSize) {
+        smallestPackage = { packageName: pkg.packageName, packageSize: pkg.packageSize };
+      }
+    });
+
+    const averageMissRate = totalMissRate / totalPackages;
+    const averagePackageSize = totalPackageSize / totalPackages;
+
+    // Calculate biggest and smallest repository
+    let biggestRepo = { repositoryTitle: "", repositorySize: 0 };
+    let smallestRepo = { repositoryTitle: "", repositorySize: Infinity };
+
+    allRepos.forEach(repo => {
+      if (repo.repositorySize > biggestRepo.repositorySize) {
+        biggestRepo = { repositoryTitle: repo.repositoryTitle, repositorySize: repo.repositorySize };
+      }
+      if (repo.repositorySize < smallestRepo.repositorySize) {
+        smallestRepo = { repositoryTitle: repo.repositoryTitle, repositorySize: repo.repositorySize };
+      }
+    });
+
+    const repositories = {};
+    packages.forEach(pkg => {
+      if (repositories[pkg.packageRepository]) {
+        repositories[pkg.packageRepository]++;
+      } else {
+        repositories[pkg.packageRepository] = 1;
+      }
+    });
+    const mostActiveRepository = Object.keys(repositories).reduce((a, b) => repositories[a] > repositories[b] ? a : b);
+
+    const totalHitRate = packages.reduce((acc, pkg) => acc + pkg.hitMissRate, 0);
+    const averageHitRate = totalHitRate / totalPackages;
+
+    const activePackages = packages.filter(pkg => pkg.numberOfDownloads > 0).length;
+
+    const repositorySizes = {};
+    packages.forEach(pkg => {
+      if (repositorySizes[pkg.packageRepository]) {
+        repositorySizes[pkg.packageRepository] += pkg.packageSize;
+      } else {
+        repositorySizes[pkg.packageRepository] = pkg.packageSize;
+      }
+    });
+    const largestRepositorySize = Math.max(...Object.values(repositorySizes));
+    const largestRepository = Object.keys(repositorySizes).find(key => repositorySizes[key] === largestRepositorySize);
+
+    res.status(200).json({
+      status: "success",
+      message: "Total miss rate and additional stats calculated",
+      stats: {
+        totalMissRate: averageMissRate,
+        totalPackages: totalPackages,
+        totalPackageSize: totalPackageSize,
+        averagePackageSize,
+        mostActiveRepository,
+        averageHitRate,
+        activePackages,
+        largestRepository,
+        totalRepositories: allRepos.length,
+        biggestPackage,
+        smallestPackage,
+        biggestRepo,
+        smallestRepo
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error!" });
+  }
+};
+
+
+const getTopFetchedPackages = async (req, res) => {
+  try {
+    const topFetchedPackages = await Package.find({}).sort({ numberOfDownloads: -1 }).limit(10);
+    res.status(200).json({
+      status: "success",
+      message: "Top fetched packages retrieved",
+      packages: topFetchedPackages
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error!" });
+  }
+};
 const downloadPackage = async (req, res) => {
   const filePath = req.params.path + (req.params[0] || '');
   const host = req.headers.host;
   const protocol = req.protocol;
+  const userIP = req.connection.remoteAddress;
+  console.log(userIP)
+  const counter = await Counter.findOneAndUpdate(
+    { id: "autovaluser" },
+    { $inc: { seq: 1 } },
+    { new: true, upsert: true }
+);
+  const user =await User.findOne({userIp:userIP})
+  if(!user){
+    user = new User({id:counter.seq, userIp: userIP, packagesUploaded: 1 });
+  }else{
+    user.packagesUploaded++;
+  }
+  await user.save();
 
   const downloadUrl = url.resolve(`${protocol}://archive.ubuntu.com/`, filePath);
   console.log(downloadUrl)
@@ -174,5 +310,8 @@ module.exports = {
   addPackage,
   getAllPackages,
   deletePackage,
-  downloadPackage
+  downloadPackage,
+  getRecentlyFetchedPackages,
+  getTopFetchedPackages,
+  getTotalMissRateAndPackageCount
 };

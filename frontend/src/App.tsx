@@ -28,7 +28,7 @@ function App() {
 
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/stats" element={<Stats />} />
+        <Route path="/statistics" element={<Stats />} />
         <Route path="/repository-list" element={<RepositoryList />} />
         <Route path="/package-list" element={<PackageList />} />
         <Route path="/backend-list" element={<BackEndList />} />
